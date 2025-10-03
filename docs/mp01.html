@@ -291,6 +291,7 @@ $ cumulative_weeks_in_top_10 &lt;dbl&gt; 1, 2, 14, 1, 1, 1, 2, 1, 5, 1, 2, 1, 7,
 <section id="pushpa-2-the-rule-reloaded-version---224-minutes" class="level1">
 <h1>Pushpa 2: The Rule (Reloaded Version) - 224 minutes</h1>
 <p>longest_film &lt;- GLOBAL_TOP_10 |&gt; filter(str_detect(category, “Films”)) |&gt; filter(!is.na(runtime)) |&gt; mutate(runtime_minutes = round(60 * runtime)) |&gt; arrange(desc(runtime_minutes)) |&gt; slice(1)</p>
+<p>``` longest_film &lt;- GLOBAL_TOP_10 |&gt; filter(str_detect(category, “Films”)) |&gt; filter(!is.na(runtime)) |&gt; mutate(runtime_minutes = round(60 * runtime)) |&gt; arrange(desc(runtime_minutes)) |&gt; slice(1)</p>
 </section>
 <section id="for-each-of-the-four-categories-what-program-has-the-most-total-hours-of-global-viewership" class="level1">
 <h1>For each of the four categories, what program has the most total hours of global viewership?</h1>

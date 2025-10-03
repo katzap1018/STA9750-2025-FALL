@@ -66,7 +66,6 @@ country_count <- COUNTRY_TOP_10 |>
   distinct(country_iso2) |> 
   nrow()
 
-
 ```
 ## Which non-English-language film has spent the most cumulative weeks in the global top 10? How many weeks did it spend?
 # All Quiet on the Western Front. 23 Total Weeks!!
