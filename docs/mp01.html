@@ -20,6 +20,41 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
 </style>
 
 
@@ -162,48 +197,160 @@ Attaching package: 'dplyr'</code></pre>
     intersect, setdiff, setequal, union</code></pre>
 </div>
 </div>
-<section id="downloading-global-data" class="level1">
-<h1>Downloading global data</h1>
-<p>if(!file.exists(GLOBAL_TOP_10_FILENAME)){ download.file(“https://www.netflix.com/tudum/top10/data/all-weeks-global.tsv”, destfile=GLOBAL_TOP_10_FILENAME) }</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Downloading global data</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span>(<span class="sc">!</span><span class="fu">file.exists</span>(GLOBAL_TOP_10_FILENAME)){</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">download.file</span>(<span class="st">"https://www.netflix.com/tudum/top10/data/all-weeks-global.tsv"</span>,</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>                <span class="at">destfile=</span>GLOBAL_TOP_10_FILENAME)</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Download country data if missing</span></span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span>(<span class="sc">!</span><span class="fu">file.exists</span>(COUNTRY_TOP_10_FILENAME)){</span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">download.file</span>(<span class="st">"https://www.netflix.com/tudum/top10/data/all-weeks-countries.tsv"</span>,</span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>                <span class="at">destfile=</span>COUNTRY_TOP_10_FILENAME)</span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a><span class="co"># Read the data into R, treating "N/A" as proper NA</span></span>
+<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a>GLOBAL_TOP_10 <span class="ot">&lt;-</span> <span class="fu">read_tsv</span>(GLOBAL_TOP_10_FILENAME, <span class="at">na =</span> <span class="st">"N/A"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: One or more parsing issues, call `problems()` on your data frame for details,
+e.g.:
+  dat &lt;- vroom(...)
+  problems(dat)</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Rows: 8840 Columns: 9
+── Column specification ────────────────────────────────────────────────────────
+Delimiter: "\t"
+chr  (3): category, show_title, season_title
+dbl  (5): weekly_rank, weekly_hours_viewed, runtime, weekly_views, cumulativ...
+date (1): week
+
+ℹ Use `spec()` to retrieve the full column specification for this data.
+ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>COUNTRY_TOP_10 <span class="ot">&lt;-</span> <span class="fu">read_tsv</span>(COUNTRY_TOP_10_FILENAME, <span class="at">na =</span> <span class="st">"N/A"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Rows: 411760 Columns: 8
+── Column specification ────────────────────────────────────────────────────────
+Delimiter: "\t"
+chr  (5): country_name, country_iso2, category, show_title, season_title
+dbl  (2): weekly_rank, cumulative_weeks_in_top_10
+date (1): week
+
+ℹ Use `spec()` to retrieve the full column specification for this data.
+ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Quick checks</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="fu">glimpse</span>(GLOBAL_TOP_10)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Rows: 8,840
+Columns: 9
+$ week                       &lt;date&gt; 2025-09-21, 2025-09-21, 2025-09-21, 2025-0…
+$ category                   &lt;chr&gt; "Films (English)", "Films (English)", "Film…
+$ weekly_rank                &lt;dbl&gt; 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 1, 2, 3, 4, …
+$ show_title                 &lt;chr&gt; "The Wrong Paris", "KPop Demon Hunters", "I…
+$ season_title               &lt;chr&gt; NA, NA, NA, "aka Charlie Sheen: Season 1", …
+$ weekly_hours_viewed        &lt;dbl&gt; 38900000, 35400000, 14400000, 21800000, 109…
+$ runtime                    &lt;dbl&gt; 1.7833, 1.6667, 1.8833, 3.0333, 1.7000, 1.5…
+$ weekly_views               &lt;dbl&gt; 21800000, 21200000, 7600000, 7200000, 64000…
+$ cumulative_weeks_in_top_10 &lt;dbl&gt; 2, 14, 1, 2, 2, 4, 4, 1, 1, 1, 1, 2, 5, 1, …</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">glimpse</span>(COUNTRY_TOP_10)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Rows: 411,760
+Columns: 8
+$ country_name               &lt;chr&gt; "Argentina", "Argentina", "Argentina", "Arg…
+$ country_iso2               &lt;chr&gt; "AR", "AR", "AR", "AR", "AR", "AR", "AR", "…
+$ week                       &lt;date&gt; 2025-09-21, 2025-09-21, 2025-09-21, 2025-0…
+$ category                   &lt;chr&gt; "Films", "Films", "Films", "Films", "Films"…
+$ weekly_rank                &lt;dbl&gt; 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 1, 2, 3, 4, …
+$ show_title                 &lt;chr&gt; "The Mule", "The Wrong Paris", "KPop Demon …
+$ season_title               &lt;chr&gt; NA, NA, NA, NA, NA, NA, NA, NA, NA, NA, "Ma…
+$ cumulative_weeks_in_top_10 &lt;dbl&gt; 1, 2, 14, 1, 1, 1, 2, 1, 5, 1, 2, 1, 7, 1, …</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(COUNTRY_TOP_10_FILENAME)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] "data/mp01/country_top10_alltime.tsv"</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Total Number of Countries Netflix Operates in</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>country_count <span class="ot">&lt;-</span> COUNTRY_TOP_10 <span class="sc">|&gt;</span> </span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">distinct</span>(country_iso2) <span class="sc">|&gt;</span> </span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">nrow</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<section id="which-non-english-language-film-has-spent-the-most-cumulative-weeks-in-the-global-top-10-how-many-weeks-did-it-spend" class="level2">
+<h2 class="anchored" data-anchor-id="which-non-english-language-film-has-spent-the-most-cumulative-weeks-in-the-global-top-10-how-many-weeks-did-it-spend">Which non-English-language film has spent the most cumulative weeks in the global top 10? How many weeks did it spend?</h2>
 </section>
-<section id="download-country-data-if-missing" class="level1">
-<h1>Download country data if missing</h1>
-<p>if(!file.exists(COUNTRY_TOP_10_FILENAME)){ download.file(“https://www.netflix.com/tudum/top10/data/all-weeks-countries.tsv”, destfile=COUNTRY_TOP_10_FILENAME) }</p>
+<section id="all-quiet-on-the-western-front.-23-total-weeks" class="level1">
+<h1>All Quiet on the Western Front. 23 Total Weeks!!</h1>
+<p>non_english_film &lt;- GLOBAL_TOP_10 |&gt; filter(category == “Films (Non-English)”) |&gt; group_by(show_title) |&gt; summarise(total_weeks = max(cumulative_weeks_in_top_10, na.rm = TRUE)) |&gt; arrange(desc(total_weeks)) |&gt; slice(1)</p>
+<section id="what-is-the-longest-film-english-or-non-english-to-have-ever-appeared-in-the-netflix-global-top-10-how-long-is-it-in-minutes" class="level2">
+<h2 class="anchored" data-anchor-id="what-is-the-longest-film-english-or-non-english-to-have-ever-appeared-in-the-netflix-global-top-10-how-long-is-it-in-minutes">What is the longest film (English or non-English) to have ever appeared in the Netflix global Top 10? How long is it in minutes?</h2>
 </section>
-<section id="read-the-data-into-r-treating-na-as-proper-na" class="level1">
-<h1>Read the data into R, treating “N/A” as proper NA</h1>
-<p>GLOBAL_TOP_10 &lt;- read_tsv(GLOBAL_TOP_10_FILENAME, na = “N/A”) COUNTRY_TOP_10 &lt;- read_tsv(COUNTRY_TOP_10_FILENAME, na = “N/A”)</p>
 </section>
-<section id="quick-checks" class="level1">
-<h1>Quick checks</h1>
-<p>glimpse(GLOBAL_TOP_10) glimpse(COUNTRY_TOP_10) print(COUNTRY_TOP_10_FILENAME)</p>
+<section id="pushpa-2-the-rule-reloaded-version---224-minutes" class="level1">
+<h1>Pushpa 2: The Rule (Reloaded Version) - 224 minutes</h1>
+<p>longest_film &lt;- GLOBAL_TOP_10 |&gt; filter(str_detect(category, “Films”)) |&gt; filter(!is.na(runtime)) |&gt; mutate(runtime_minutes = round(60 * runtime)) |&gt; arrange(desc(runtime_minutes)) |&gt; slice(1)</p>
 </section>
-<section id="total-number-of-countries-netflix-operates-in" class="level1">
-<h1>Total Number of Countries Netflix Operates in</h1>
-<p>country_count &lt;- COUNTRY_TOP_10 |&gt; distinct(country_iso2) |&gt; nrow()</p>
+<section id="for-each-of-the-four-categories-what-program-has-the-most-total-hours-of-global-viewership" class="level1">
+<h1>For each of the four categories, what program has the most total hours of global viewership?</h1>
+<p>top_programs_by_category &lt;- GLOBAL_TOP_10 |&gt; group_by(category, show_title) |&gt; summarise(total_hours = sum(weekly_hours_viewed, na.rm = TRUE), .groups = “drop”) |&gt; group_by(category) |&gt; slice_max(total_hours, n = 1) |&gt; arrange(desc(total_hours)) top_programs_by_category |&gt; mutate(total_hours = scales::comma(total_hours)) |&gt; select(category, show_title, total_hours) |&gt; format_titles() |&gt; datatable( options = list(searching = FALSE, info = FALSE), caption = “Top Programs by Category” )</p>
+<section id="which-tv-show-had-the-longest-run-in-a-countrys-top-10-how-long-was-this-run-and-in-what-country-did-it-occur" class="level2">
+<h2 class="anchored" data-anchor-id="which-tv-show-had-the-longest-run-in-a-countrys-top-10-how-long-was-this-run-and-in-what-country-did-it-occur">Which TV show had the longest run in a country’s Top 10? How long was this run and in what country did it occur?</h2>
 </section>
-<section id="which-non-english-language-film-has-spent-the-most-cumulative-weeks-in-the-global-top-10-how-many-weeks-did-it-spend" class="level1">
-<h1>Which non-English-language film has spent the most cumulative weeks in the global top 10? How many weeks did it spend?</h1>
-<p>##All Quiet on the Western Front. 23 Total Weeks!! non_english_film &lt;- GLOBAL_TOP_10 |&gt; filter(category == “Films (Non-English)”) |&gt; group_by(show_title) |&gt; summarise(total_weeks = max(cumulative_weeks_in_top_10, na.rm = TRUE)) |&gt; arrange(desc(total_weeks)) |&gt; slice(1)</p>
-<p>#What is the longest film (English or non-English) to have ever appeared in the Netflix global Top 10? How long is it in minutes?</p>
-<p>##Pushpa 2: The Rule (Reloaded Version) - 224 minutes longest_film &lt;- GLOBAL_TOP_10 |&gt; filter(str_detect(category, “Films”)) |&gt; filter(!is.na(runtime)) |&gt; mutate(runtime_minutes = round(60 * runtime)) |&gt; arrange(desc(runtime_minutes)) |&gt; slice(1) # For each of the four categories, what program has the most total hours of global viewership? top_programs_by_category &lt;- GLOBAL_TOP_10 |&gt; group_by(category, show_title) |&gt; summarise(total_hours = sum(weekly_hours_viewed, na.rm = TRUE), .groups = “drop”) |&gt; group_by(category) |&gt; slice_max(total_hours, n = 1) |&gt; arrange(desc(total_hours)) top_programs_by_category |&gt; mutate(total_hours = scales::comma(total_hours)) |&gt; select(category, show_title, total_hours) |&gt; format_titles() |&gt; datatable( options = list(searching = FALSE, info = FALSE), caption = “Top Programs by Category” ) #Which TV show had the longest run in a country’s Top 10? How long was this run and in what country did it occur? ##Money Heist - Pakistan - 127 Weeks longest_country_run &lt;- COUNTRY_TOP_10 |&gt; filter(str_detect(category, “TV”)) |&gt; group_by(country_name, show_title) |&gt; summarise(max_weeks = max(cumulative_weeks_in_top_10, na.rm = TRUE), .groups = “drop”) |&gt; arrange(desc(max_weeks)) |&gt; slice(1) # Netflix provides over 200 weeks of service history for all but one country in our data set. Which country is this and when did Netflix cease operations in that country? ## Russia in February 2022 library(lubridate) country_weeks &lt;- COUNTRY_TOP_10 |&gt; group_by(country_name) |&gt; summarise( weeks_count = n_distinct(week), last_week = max(week, na.rm = TRUE), .groups = “drop” ) |&gt; filter(weeks_count &lt; 200) |&gt; arrange(weeks_count) #What is the total viewership of the TV show Squid Game? ##5,310,000,000 hours squid_game_total &lt;- GLOBAL_TOP_10 |&gt; filter(str_detect(show_title, “Squid Game”)) |&gt; summarise(total_hours = sum(weekly_hours_viewed, na.rm = TRUE)) |&gt; pull(total_hours) #The movie Red Notice has a run-time of 1 hour and 58 minutes. Approximately how many views did it receive in 2021? ## 0 Views library(lubridate) red_notice_2021 &lt;- GLOBAL_TOP_10 |&gt; filter(show_title == “Red Notice”, year(week) == 2021) |&gt; summarise(total_views = sum(weekly_views, na.rm = TRUE)) |&gt; pull(total_views) #How many Films reached Number 1 in the US but did not originally debut there? What is the most recent film to pull this off? ## 45 total films - Kpop Demon Hunters? us_films_analysis &lt;- COUNTRY_TOP_10 %&gt;% filter(country_name == “United States”, grepl(“Films”, category)) %&gt;% group_by(show_title) %&gt;% arrange(week) %&gt;% mutate( ever_hit_1 = any(weekly_rank == 1), debut_rank = first(weekly_rank) ) %&gt;% filter(ever_hit_1 == TRUE, debut_rank &gt; 1) %&gt;% ungroup() %&gt;% distinct(show_title) %&gt;% nrow()</p>
-<p>most_recent_film &lt;- COUNTRY_TOP_10 %&gt;% filter(country_name == “United States”, grepl(“Films”, category)) %&gt;% group_by(show_title) %&gt;% arrange(week) %&gt;% mutate( ever_hit_1 = any(weekly_rank == 1), debut_rank = first(weekly_rank), latest_week = max(week) ) %&gt;% filter(ever_hit_1 == TRUE, debut_rank &gt; 1) %&gt;% ungroup() %&gt;% arrange(desc(latest_week)) %&gt;% slice(1) # Which TV show/season hit the top 10 in the most countries in its debut week? In how many countries did it chart? ## Emily in Paris. 94 Countries. tv_debut_countries &lt;- COUNTRY_TOP_10 %&gt;% filter(grepl(“TV”, category)) %&gt;% group_by(show_title) %&gt;% filter(week == min(week)) %&gt;% summarise(countries_count = n_distinct(country_name), .groups = “drop”) %&gt;% arrange(desc(countries_count)) %&gt;% slice(1)</p>
+</section>
+<section id="money-heist---pakistan---127-weeks" class="level1">
+<h1>Money Heist - Pakistan - 127 Weeks</h1>
+<p>longest_country_run &lt;- COUNTRY_TOP_10 |&gt; filter(str_detect(category, “TV”)) |&gt; group_by(country_name, show_title) |&gt; summarise(max_weeks = max(cumulative_weeks_in_top_10, na.rm = TRUE), .groups = “drop”) |&gt; arrange(desc(max_weeks)) |&gt; slice(1)</p>
+<section id="netflix-provides-over-200-weeks-of-service-history-for-all-but-one-country-in-our-data-set.-which-country-is-this-and-when-did-netflix-cease-operations-in-that-country" class="level2">
+<h2 class="anchored" data-anchor-id="netflix-provides-over-200-weeks-of-service-history-for-all-but-one-country-in-our-data-set.-which-country-is-this-and-when-did-netflix-cease-operations-in-that-country">Netflix provides over 200 weeks of service history for all but one country in our data set. Which country is this and when did Netflix cease operations in that country?</h2>
+</section>
+</section>
+<section id="russia-in-february-2022" class="level1">
+<h1>Russia in February 2022</h1>
+<p>library(lubridate) country_weeks &lt;- COUNTRY_TOP_10 |&gt; group_by(country_name) |&gt; summarise( weeks_count = n_distinct(week), last_week = max(week, na.rm = TRUE), .groups = “drop” ) |&gt; filter(weeks_count &lt; 200) |&gt; arrange(weeks_count)</p>
+<section id="what-is-the-total-viewership-of-the-tv-show-squid-game" class="level2">
+<h2 class="anchored" data-anchor-id="what-is-the-total-viewership-of-the-tv-show-squid-game">What is the total viewership of the TV show Squid Game?</h2>
+</section>
+</section>
+<section id="hours" class="level1">
+<h1>5,310,000,000 hours</h1>
+<p>squid_game_total &lt;- GLOBAL_TOP_10 |&gt; filter(str_detect(show_title, “Squid Game”)) |&gt; summarise(total_hours = sum(weekly_hours_viewed, na.rm = TRUE)) |&gt; pull(total_hours)</p>
+<section id="the-movie-red-notice-has-a-run-time-of-1-hour-and-58-minutes.-approximately-how-many-views-did-it-receive-in-2021" class="level2">
+<h2 class="anchored" data-anchor-id="the-movie-red-notice-has-a-run-time-of-1-hour-and-58-minutes.-approximately-how-many-views-did-it-receive-in-2021">The movie Red Notice has a run-time of 1 hour and 58 minutes. Approximately how many views did it receive in 2021?</h2>
+</section>
+</section>
+<section id="views" class="level1">
+<h1>0 Views</h1>
+<p>library(lubridate) red_notice_2021 &lt;- GLOBAL_TOP_10 |&gt; filter(show_title == “Red Notice”, year(week) == 2021) |&gt; summarise(total_views = sum(weekly_views, na.rm = TRUE)) |&gt; pull(total_views)</p>
+<section id="how-many-films-reached-number-1-in-the-us-but-did-not-originally-debut-there-what-is-the-most-recent-film-to-pull-this-off" class="level2">
+<h2 class="anchored" data-anchor-id="how-many-films-reached-number-1-in-the-us-but-did-not-originally-debut-there-what-is-the-most-recent-film-to-pull-this-off">How many Films reached Number 1 in the US but did not originally debut there? What is the most recent film to pull this off?</h2>
+</section>
+</section>
+<section id="total-films---kpop-demon-hunters" class="level1">
+<h1>45 total films - Kpop Demon Hunters?</h1>
+<p>us_films_analysis &lt;- COUNTRY_TOP_10 %&gt;% filter(country_name == “United States”, grepl(“Films”, category)) %&gt;% group_by(show_title) %&gt;% arrange(week) %&gt;% mutate( ever_hit_1 = any(weekly_rank == 1), debut_rank = first(weekly_rank) ) %&gt;% filter(ever_hit_1 == TRUE, debut_rank &gt; 1) %&gt;% ungroup() %&gt;% distinct(show_title) %&gt;% nrow()</p>
+<p>most_recent_film &lt;- COUNTRY_TOP_10 %&gt;% filter(country_name == “United States”, grepl(“Films”, category)) %&gt;% group_by(show_title) %&gt;% arrange(week) %&gt;% mutate( ever_hit_1 = any(weekly_rank == 1), debut_rank = first(weekly_rank), latest_week = max(week) ) %&gt;% filter(ever_hit_1 == TRUE, debut_rank &gt; 1) %&gt;% ungroup() %&gt;% arrange(desc(latest_week)) %&gt;% slice(1) # Which TV show/season hit the top 10 in the most countries in its debut week? In how many countries did it chart? # Emily in Paris. 94 Countries.</p>
+<p>tv_debut_countries &lt;- COUNTRY_TOP_10 %&gt;% filter(grepl(“TV”, category)) %&gt;% group_by(show_title) %&gt;% filter(week == min(week)) %&gt;% summarise(countries_count = n_distinct(country_name), .groups = “drop”) %&gt;% arrange(desc(countries_count)) %&gt;% slice(1)</p>
 <section id="stranger-things-season-5-coming-out-soon" class="level2">
 <h2 class="anchored" data-anchor-id="stranger-things-season-5-coming-out-soon">Stranger Things Season 5 Coming Out Soon!</h2>
 </section>
-<section id="the-hawkins-fab-5-are-teaming-up-once-again-for-a-final-stand-against-the-upside-down.-the-netflix-hit-original-series-that-has-gathered-nearly-3-billion-viewing-hours-has-fans-re-binging-just-in-time-for-halloween-season-as-the-show-is-coming-back-for-its-5th-and-final-season.-being-in-the-global-top-10-for-19-consecutive-weeks-and-only-dominating-similarly-to-squid-games-stranger-things-has-continued-to-be-a-mainstay-in-the-top-charts-in-the-global-markets-and-this-final-season-should-be-a-very-successful-bow-on-what-has-been-a-tremendous-success-for-netflix." class="level2">
-<h2 class="anchored" data-anchor-id="the-hawkins-fab-5-are-teaming-up-once-again-for-a-final-stand-against-the-upside-down.-the-netflix-hit-original-series-that-has-gathered-nearly-3-billion-viewing-hours-has-fans-re-binging-just-in-time-for-halloween-season-as-the-show-is-coming-back-for-its-5th-and-final-season.-being-in-the-global-top-10-for-19-consecutive-weeks-and-only-dominating-similarly-to-squid-games-stranger-things-has-continued-to-be-a-mainstay-in-the-top-charts-in-the-global-markets-and-this-final-season-should-be-a-very-successful-bow-on-what-has-been-a-tremendous-success-for-netflix.">The Hawkins fab 5 are teaming up once again for a final stand against the upside down. The Netflix hit original series that has gathered nearly 3 billion viewing hours has fans re-binging just in time for Halloween season as the show is coming back for its 5th and final season. Being in the global top 10 for 19 consecutive weeks and only dominating similarly to Squid Games, Stranger Things has continued to be a mainstay in the top charts in the global markets and this final season should be a very successful bow on what has been a tremendous success for Netflix.</h2>
 </section>
-</section>
-<section id="analyze-stranger-things-most-recent-season-data" class="level1">
-<h1>Analyze Stranger Things most recent season data</h1>
+<section id="the-hawkins-fab-5-are-teaming-up-once-again-for-a-final-stand-against-the-upside-down.-the-netflix-hit-original-series-that-has-gathered-nearly-3-billion-viewing-hours-has-fans-re-binging-just-in-time-for-halloween-season-as-the-show-is-coming-back-for-its-5th-and-final-season.-being-in-the-global-top-10-for-19-consecutive-weeks-and-only-dominating-similarly-to-squid-games-stranger-things-has-continued-to-be-a-mainstay-in-the-top-charts-in-the-global-markets-and-this-final-season-should-be-a-very-successful-bow-on-what-has-been-a-tremendous-success-for-netflix." class="level1">
+<h1>The Hawkins fab 5 are teaming up once again for a final stand against the upside down. The Netflix hit original series that has gathered nearly 3 billion viewing hours has fans re-binging just in time for Halloween season as the show is coming back for its 5th and final season. Being in the global top 10 for 19 consecutive weeks and only dominating similarly to Squid Games, Stranger Things has continued to be a mainstay in the top charts in the global markets and this final season should be a very successful bow on what has been a tremendous success for Netflix.</h1>
 <p>stranger_things_data &lt;- GLOBAL_TOP_10 %&gt;% filter(grepl(“Stranger”, show_title)) %&gt;% arrange(desc(week)) %&gt;% slice_head(n = 50) %&gt;% summarise( total_viewing_hours = sum(weekly_hours_viewed, na.rm = TRUE), max_weeks = max(cumulative_weeks_in_top_10, na.rm = TRUE) )</p>
-</section>
-<section id="find-comparable-shows" class="level1">
-<h1>Find comparable shows</h1>
 <p>comparable_shows &lt;- GLOBAL_TOP_10 %&gt;% filter(category == “TV (English)”, !grepl(“Stranger”, show_title)) %&gt;% group_by(show_title) %&gt;% summarise(total_hours = sum(weekly_hours_viewed, na.rm = TRUE)) %&gt;% arrange(desc(total_hours)) %&gt;% slice(1:2) %&gt;% pull(show_title)</p>
-<p>comparable_show_1 &lt;- comparable_shows[1] comparable_show_2 &lt;- comparable_shows[2] #India Continuing to Dominate on Netflix ##Netflix’s expansion in India stands out as a remarkable success. Over time, 1,168 unique titles have appeared in the country’s Top 10 charts, accounting for 4,420 weekly entries. Shows like The Great Indian Kapil Show became major hits locally, despite having little presence in U.S. rankings, highlighting the impact of content customized for specific languages and cultural tastes.</p>
-<p>##Examining trends over time, Netflix’s content diversity in India has grown, with an average of 39 different programs appearing in the Top 10 each week. With an estimated 30–40 million subscribers based on engagement patterns, India ranks among Netflix’s largest and fastest-growing markets. Notably, 71 shows—including hits like Money Heist—remained in India’s Top 10 for over 10 weeks, demonstrating both the company’s expanding reach and the long-term potential of India as a key growth market. india_total_shows &lt;- COUNTRY_TOP_10 |&gt; filter(country_name == “India”) |&gt; distinct(show_title) |&gt; nrow()</p>
+<p>comparable_show_1 &lt;- comparable_shows[1] comparable_show_2 &lt;- comparable_shows[2]</p>
+<section id="india-continuing-to-dominate-on-netflix" class="level2">
+<h2 class="anchored" data-anchor-id="india-continuing-to-dominate-on-netflix">India Continuing to Dominate on Netflix</h2>
+</section>
+</section>
+<section id="netflixs-expansion-in-india-stands-out-as-a-remarkable-success.-over-time-1168-unique-titles-have-appeared-in-the-countrys-top-10-charts-accounting-for-4420-weekly-entries.-shows-like-the-great-indian-kapil-show-became-major-hits-locally-despite-having-little-presence-in-u.s.-rankings-highlighting-the-impact-of-content-customized-for-specific-languages-and-cultural-tastes." class="level1">
+<h1>Netflix’s expansion in India stands out as a remarkable success. Over time, 1,168 unique titles have appeared in the country’s Top 10 charts, accounting for 4,420 weekly entries. Shows like The Great Indian Kapil Show became major hits locally, despite having little presence in U.S. rankings, highlighting the impact of content customized for specific languages and cultural tastes.</h1>
+</section>
+<section id="examining-trends-over-time-netflixs-content-diversity-in-india-has-grown-with-an-average-of-39-different-programs-appearing-in-the-top-10-each-week.-with-an-estimated-3040-million-subscribers-based-on-engagement-patterns-india-ranks-among-netflixs-largest-and-fastest-growing-markets.-notably-71-showsincluding-hits-like-money-heistremained-in-indias-top-10-for-over-10-weeks-demonstrating-both-the-companys-expanding-reach-and-the-long-term-potential-of-india-as-a-key-growth-market." class="level1">
+<h1>Examining trends over time, Netflix’s content diversity in India has grown, with an average of 39 different programs appearing in the Top 10 each week. With an estimated 30–40 million subscribers based on engagement patterns, India ranks among Netflix’s largest and fastest-growing markets. Notably, 71 shows—including hits like Money Heist—remained in India’s Top 10 for over 10 weeks, demonstrating both the company’s expanding reach and the long-term potential of India as a key growth market.</h1>
+<p>india_total_shows &lt;- COUNTRY_TOP_10 |&gt; filter(country_name == “India”) |&gt; distinct(show_title) |&gt; nrow()</p>
 <p>india_total_weeks &lt;- COUNTRY_TOP_10 |&gt; filter(country_name == “India”) |&gt; nrow()</p>
 <p>india_shows &lt;- COUNTRY_TOP_10 |&gt; filter(country_name == “India”) |&gt; group_by(show_title) |&gt; summarise(weeks = n(), .groups = “drop”) |&gt; arrange(desc(weeks))</p>
 <p>us_shows &lt;- COUNTRY_TOP_10 |&gt; filter(country_name == “United States”) |&gt; distinct(show_title)</p>
@@ -215,7 +362,13 @@ Attaching package: 'dplyr'</code></pre>
 <p>growth_trend &lt;- if(nrow(india_monthly) &gt; 1) { if(tail(india_monthly<span class="math inline">\(shows, 1) &gt; head(india_monthly\)</span>shows, 1)) “increased” else “remained stable” } else { “grown” }</p>
 <p>avg_shows_per_week &lt;- round(mean(india_monthly$shows, na.rm = TRUE))</p>
 <p>subscriber_estimate &lt;- “30-40 million”</p>
-<p>#Massive Risks Created Massive Reward - 2022 - 2025 The Global Dominance of Netflix ##February 24, 2022, was a dark day in European history as Russia began deploying troops in Ukraine. Global outrage on Russia full scale war effort saw large efforts in international companies and committees no longer recognizing Russia. On February 27, 2022, Netflix was one of the companies that pulled the plug on subscribers being able to stream their favorite movies and TV shows. The immediate result, detrimental, Netflix reported poor quarterly earnings losing 200,000 subscribers when looking to gain an additional 2.5 million subscribers. This caused the share value of Netflix to plummet 45% in April and Netflix had to pivot, where to dominate next? Netflix then began investing in the Asian market, where over the span of 3 years has seen shows: Squid Games, Kpop Demon Hunters, RRR dominate. Squid Games has become the most viewed show in Netflix history and overall the Asian market has rebounded Netflix in its entirety, with overall share price increasing by over 600% since its Q1 report in 2022. With no signs of bringing services back to one of the platforms largest users, Netflix has reshaped its company to invest in new markets to gain incredible international success. library(lubridate) country_weeks &lt;- COUNTRY_TOP_10 |&gt; group_by(country_name) |&gt; summarise( weeks_count = n_distinct(week), last_week = max(week, na.rm = TRUE), .groups = “drop” ) |&gt; filter(weeks_count &lt; 200) |&gt; arrange(weeks_count) #What is the total viewership of the TV show Squid Game? ##5,310,000,000 hours squid_game_total &lt;- GLOBAL_TOP_10 |&gt; filter(str_detect(show_title, “Squid Game”)) |&gt; summarise(total_hours = sum(weekly_hours_viewed, na.rm = TRUE)) |&gt; pull(total_hours)</p>
+<section id="massive-risks-created-massive-reward---2022---2025-the-global-dominance-of-netflix" class="level2">
+<h2 class="anchored" data-anchor-id="massive-risks-created-massive-reward---2022---2025-the-global-dominance-of-netflix">Massive Risks Created Massive Reward - 2022 - 2025 The Global Dominance of Netflix</h2>
+</section>
+</section>
+<section id="february-24-2022-was-a-dark-day-in-european-history-as-russia-began-deploying-troops-in-ukraine.-global-outrage-on-russia-full-scale-war-effort-saw-large-efforts-in-international-companies-and-committees-no-longer-recognizing-russia.-on-february-27-2022-netflix-was-one-of-the-companies-that-pulled-the-plug-on-subscribers-being-able-to-stream-their-favorite-movies-and-tv-shows.-the-immediate-result-detrimental-netflix-reported-poor-quarterly-earnings-losing-200000-subscribers-when-looking-to-gain-an-additional-2.5-million-subscribers.-this-caused-the-share-value-of-netflix-to-plummet-45-in-april-and-netflix-had-to-pivot-where-to-dominate-next-netflix-then-began-investing-in-the-asian-market-where-over-the-span-of-3-years-has-seen-shows-squid-games-kpop-demon-hunters-rrr-dominate.-squid-games-has-become-the-most-viewed-show-in-netflix-history-and-overall-the-asian-market-has-rebounded-netflix-in-its-entirety-with-overall-share-price-increasing-by-over-600-since-its-q1-report-in-2022.-with-no-signs-of-bringing-services-back-to-one-of-the-platforms-largest-users-netflix-has-reshaped-its-company-to-invest-in-new-markets-to-gain-incredible-international-success." class="level1">
+<h1>February 24, 2022, was a dark day in European history as Russia began deploying troops in Ukraine. Global outrage on Russia full scale war effort saw large efforts in international companies and committees no longer recognizing Russia. On February 27, 2022, Netflix was one of the companies that pulled the plug on subscribers being able to stream their favorite movies and TV shows. The immediate result, detrimental, Netflix reported poor quarterly earnings losing 200,000 subscribers when looking to gain an additional 2.5 million subscribers. This caused the share value of Netflix to plummet 45% in April and Netflix had to pivot, where to dominate next? Netflix then began investing in the Asian market, where over the span of 3 years has seen shows: Squid Games, Kpop Demon Hunters, RRR dominate. Squid Games has become the most viewed show in Netflix history and overall the Asian market has rebounded Netflix in its entirety, with overall share price increasing by over 600% since its Q1 report in 2022. With no signs of bringing services back to one of the platforms largest users, Netflix has reshaped its company to invest in new markets to gain incredible international success.</h1>
+<p>library(lubridate) country_weeks &lt;- COUNTRY_TOP_10 |&gt; group_by(country_name) |&gt; summarise( weeks_count = n_distinct(week), last_week = max(week, na.rm = TRUE), .groups = “drop” ) |&gt; filter(weeks_count &lt; 200) |&gt; arrange(weeks_count)</p>
 
 
 </section>
