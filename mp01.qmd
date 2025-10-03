@@ -1,0 +1,60 @@
+---
+title: "MP01: Netflix"
+---
+
+```{r}
+#| echo: false
+library(readr)
+library(dplyr)
+
+# Data Import
+if(!dir.exists(file.path("data", "mp01"))){
+  dir.create(file.path("data", "mp01"), showWarnings=FALSE, recursive=TRUE)
+}
+
+# File paths to tsv
+GLOBAL_TOP_10_FILENAME <- file.path("data", "mp01", "global_top10_alltime.tsv")
+COUNTRY_TOP_10_FILENAME <- file.path("data", "mp01", "country_top10_alltime.tsv")
+```
+
+
+```{r}
+```
+
+
+```{r}
+```
+
+
+```{r}
+```
+
+
+```{r}
+```
+
+
+```{r}
+```
+
+
+```{r}
+# Downloading global data
+if(!file.exists(GLOBAL_TOP_10_FILENAME)){
+  download.file("https://www.netflix.com/tudum/top10/data/all-weeks-global.tsv",
+                destfile=GLOBAL_TOP_10_FILENAME)
+}
+
+# Download country data if missing
+if(!file.exists(COUNTRY_TOP_10_FILENAME)){
+  download.file("https://www.netflix.com/tudum/top10/data/all-weeks-countries.tsv",
+                destfile=COUNTRY_TOP_10_FILENAME)
+}
+
+# Read the data into R, treating "N/A" as proper NA
+GLOBAL_TOP_10 <- read_tsv(GLOBAL_TOP_10_FILENAME, na = "N/A")
+COUNTRY_TOP_10 <- read_tsv(COUNTRY_TOP_10_FILENAME, na = "N/A")
+
+# Quick checks
+glimpse(GLOBAL_TOP_10)
+glimpse(COUNTRY_TOP_10)
