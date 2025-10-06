@@ -1,5 +1,3 @@
-header: "9750 - Data Visualization Portfolio"
----
 title: "MP01: Netflix"
 ---
 
@@ -16,28 +14,7 @@ if(!dir.exists(file.path("data", "mp01"))){
 # File paths to tsv
 GLOBAL_TOP_10_FILENAME <- file.path("data", "mp01", "global_top10_alltime.tsv")
 COUNTRY_TOP_10_FILENAME <- file.path("data", "mp01", "country_top10_alltime.tsv")
-```
-
-
 ```{r}
-```
-
-
-```{r}
-```
-
-
-```{r}
-```
-
-
-```{r}
-```
-
-
-```{r}
-```
-
 
 ```{r}
 # Downloading global data
@@ -65,8 +42,7 @@ print(COUNTRY_TOP_10_FILENAME)
 country_count <- COUNTRY_TOP_10 |> 
   distinct(country_iso2) |> 
   nrow()
-
-```
+```{r}
 ## Which non-English-language film has spent the most cumulative weeks in the global top 10? How many weeks did it spend?
 # All Quiet on the Western Front. 23 Total Weeks!!
 non_english_film <- GLOBAL_TOP_10 |>
@@ -76,10 +52,9 @@ non_english_film <- GLOBAL_TOP_10 |>
   arrange(desc(total_weeks)) |>
   slice(1)
 ```{r}
-```
 ## What is the longest film (English or non-English) to have ever appeared in the Netflix global Top 10? How long is it in minutes?
 # Pushpa 2: The Rule (Reloaded Version) - 224 minutes
-```
+```{r}
 longest_film <- GLOBAL_TOP_10 |>
   filter(str_detect(category, "Films")) |>
   filter(!is.na(runtime)) |>
@@ -87,8 +62,8 @@ longest_film <- GLOBAL_TOP_10 |>
   arrange(desc(runtime_minutes)) |>
   slice(1)
 ```{r}
-```
-# For each of the four categories, what program has the most total hours of global viewership?
+## For each of the four categories, what program has the most total hours of global viewership?
+```{r}
 top_programs_by_category <- GLOBAL_TOP_10 |>
   group_by(category, show_title) |>
   summarise(total_hours = sum(weekly_hours_viewed, na.rm = TRUE), .groups = "drop") |>
@@ -104,7 +79,6 @@ top_programs_by_category |>
     caption = "Top Programs by Category"
   )
 ```{r}
-```
 ## Which TV show had the longest run in a country’s Top 10? How long was this run and in what country did it occur?
 # Money Heist - Pakistan - 127 Weeks
 longest_country_run <- COUNTRY_TOP_10 |>
@@ -114,7 +88,6 @@ longest_country_run <- COUNTRY_TOP_10 |>
   arrange(desc(max_weeks)) |>
   slice(1)
 ```{r}
-```
 ## Netflix provides over 200 weeks of service history for all but one country in our data set. Which country is this and when did Netflix cease operations in that country?
 # Russia in February 2022
 library(lubridate)
@@ -128,7 +101,6 @@ country_weeks <- COUNTRY_TOP_10 |>
   filter(weeks_count < 200) |>
   arrange(weeks_count)
 ```{r}
-```
 ## What is the total viewership of the TV show Squid Game?
 # 5,310,000,000 hours
 squid_game_total <- GLOBAL_TOP_10 |>
@@ -136,7 +108,6 @@ squid_game_total <- GLOBAL_TOP_10 |>
   summarise(total_hours = sum(weekly_hours_viewed, na.rm = TRUE)) |>
   pull(total_hours)
 ```{r}
-```
 ## The movie Red Notice has a run-time of 1 hour and 58 minutes. Approximately how many views did it receive in 2021?
 # 0 Views
 ```{r}
@@ -147,7 +118,6 @@ red_notice_2021 <- GLOBAL_TOP_10 |>
   summarise(total_views = sum(weekly_views, na.rm = TRUE)) |>
   pull(total_views)
 ```{r}
-```
 ## How many Films reached Number 1 in the US but did not originally debut there? What is the most recent film to pull this off?
 # 45 total films - Kpop Demon Hunters?
 us_films_analysis <- COUNTRY_TOP_10 %>%
@@ -162,7 +132,7 @@ us_films_analysis <- COUNTRY_TOP_10 %>%
   ungroup() %>%
   distinct(show_title) %>%
   nrow()
-
+```{r}
 most_recent_film <- COUNTRY_TOP_10 %>%
   filter(country_name == "United States", grepl("Films", category)) %>%
   group_by(show_title) %>%
@@ -179,7 +149,6 @@ most_recent_film <- COUNTRY_TOP_10 %>%
 # Which TV show/season hit the top 10 in the most countries in its debut week? In how many countries did it chart?
 # Emily in Paris. 94 Countries.
 ```{r}
-```
 tv_debut_countries <- COUNTRY_TOP_10 %>%
   filter(grepl("TV", category)) %>%
   group_by(show_title) %>%
@@ -188,11 +157,9 @@ tv_debut_countries <- COUNTRY_TOP_10 %>%
   arrange(desc(countries_count)) %>%
   slice(1)
 ```{r}
-```
 ## Stranger Things Season 5 Coming Out Soon!
 # The Hawkins fab 5 are teaming up once again for a final stand against the upside down. The Netflix hit original series that has gathered nearly 3 billion viewing hours has fans re-binging just in time for Halloween season as the show is coming back for its 5th and final season. Being in the global top 10 for 19 consecutive weeks and only dominating similarly to Squid Games, Stranger Things has continued to be a mainstay in the top charts in the global markets and this final season should be a very successful bow on what has been a tremendous success for Netflix.
 ```{r}
-```
 stranger_things_data <- GLOBAL_TOP_10 %>%
   filter(grepl("Stranger", show_title)) %>%
   arrange(desc(week)) %>%
@@ -213,13 +180,11 @@ comparable_shows <- GLOBAL_TOP_10 %>%
 comparable_show_1 <- comparable_shows[1]
 comparable_show_2 <- comparable_shows[2]
 ```{r}
-```
 ## India Continuing to Dominate on Netflix
 # Netflix’s expansion in India stands out as a remarkable success. Over time, 1,168 unique titles have appeared in the country’s Top 10 charts, accounting for 4,420 weekly entries. Shows like The Great Indian Kapil Show became major hits locally, despite having little presence in U.S. rankings, highlighting the impact of content customized for specific languages and cultural tastes.
 
 # Examining trends over time, Netflix’s content diversity in India has grown, with an average of 39 different programs appearing in the Top 10 each week. With an estimated 30–40 million subscribers based on engagement patterns, India ranks among Netflix’s largest and fastest-growing markets. Notably, 71 shows—including hits like Money Heist—remained in India’s Top 10 for over 10 weeks, demonstrating both the company’s expanding reach and the long-term potential of India as a key growth market.
 ```{r}
-```
 india_total_shows <- COUNTRY_TOP_10 |>
   filter(country_name == "India") |>
   distinct(show_title) |>
@@ -276,11 +241,9 @@ avg_shows_per_week <- round(mean(india_monthly$shows, na.rm = TRUE))
 
 subscriber_estimate <- "30-40 million"
 ```{r}
-```
 ## Massive Risks Created Massive Reward - 2022 - 2025 The Global Dominance of Netflix
 # February 24, 2022, was a dark day in European history as Russia began deploying troops in Ukraine. Global outrage on Russia full scale war effort saw large efforts in international companies and committees no longer recognizing Russia. On February 27, 2022, Netflix was one of the companies that pulled the plug on subscribers being able to stream their favorite movies and TV shows. The immediate result, detrimental, Netflix reported poor quarterly earnings losing 200,000 subscribers when looking to gain an additional 2.5 million subscribers. This caused the share value of Netflix to plummet 45% in April and Netflix had to pivot, where to dominate next? Netflix then began investing in the Asian market, where over the span of 3 years has seen shows: Squid Games, Kpop Demon Hunters, RRR dominate. Squid Games has become the most viewed show in Netflix history and overall the Asian market has rebounded Netflix in its entirety, with overall share price increasing by over 600% since its Q1 report in 2022. With no signs of bringing services back to one of the platforms largest users, Netflix has reshaped its company to invest in new markets to gain incredible international success.
 ```{r}
-```
 library(lubridate)
 country_weeks <- COUNTRY_TOP_10 |>
   group_by(country_name) |>
