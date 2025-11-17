@@ -290,6 +290,8 @@ manhattan_species <- trees_districts |>
   filter(borough == "Manhattan") |>
   st_drop_geometry() |>
   count(spc_common, sort = TRUE)
+most_common_species_manhattan <- manhattan_species$spc_common[[1]]
+cat("The most common street tree species in Manhattan is:", most_common_species_manhattan)
 
 print(head(manhattan_species, 10))
 
